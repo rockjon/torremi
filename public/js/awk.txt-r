@@ -1,0 +1,156 @@
+<div class="header">Guia</div>
+<div class="content">
+<form class="ui mini form">
+<div class="ui calendar" id="example5">
+<div class="ui input left icon">
+<i class="calendar icon"></i>
+<input type="text" name="fecha" placeholder="Date" value="1/1/2017 3pm">
+</div>
+</div>
+<h4 class="ui dividing header">Remitente</h4>
+<div class="field">
+<label>Nombre</label>
+<input type="text" name="remit_nom" placeholder="Nombre">
+</div>
+<div class="field">
+<label>Domicilio</label>
+<div class="fields">
+<div class="nine wide field">
+<input type="text" name="remit_domicilio" placeholder="Domicilio">
+</div>
+<div class="five wide field">
+<input type="text" name="remit_ciudad" placeholder="Ciudad">
+</div>
+<div class="two wide field">
+<input type="text" name="remit_cp" placeholder="CP">
+</div>
+</div>
+<div class="field">
+
+<div class="two fields">
+<div class="field">
+<input type="text" name="remit_rfc" placeholder="RFC">
+</div>
+<div class="field">
+                                <input type="text" name="remit_tel" placeholder="Telefono">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h4 class="ui dividing header">Destinatario</h4>
+                <div class="field">
+                    <label>Nombre</label>
+                    <input type="text" name="dest_nom" placeholder="Nombre">
+                </div>
+                <div class="field">
+                    <label>Domicilio</label>
+                    <div class="fields">
+                        <div class="nine wide field">
+                            <input type="text" name="dest_domicilio" placeholder="Domicilio">
+                        </div>
+                        <div class="five wide field">
+                            <input type="text" name="dest_ciudad" placeholder="Ciudad">
+                        </div>
+                        <div class="two wide field">
+                            <input type="text" name="dest_cp" placeholder="CP">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="two fields">
+                            <div class="field">
+                                <input type="text" name="dest_rfc" placeholder="RFC">
+                            </div>
+                            <div class="field">
+                                <input type="text" name="dest_tel" placeholder="Telefono">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="ui action input">
+                            <input type="text" id="_attachmentName">
+                            <label for="attachmentName" class="ui icon button btn-file">
+                                 <i class="attachment basic icon"></i>
+                                 <input type="file" id="attachmentName" name="attachmentName" style="display: none">
+                            </label>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="two fields">
+                            <div class="field">
+                                <input type="text" name="dest_tproduct" placeholder="Tipo Producto">
+                            </div>
+                            <div class="field">
+                                <input type="text" name="dest_bultos" placeholder="No. Bultos">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="two fields">
+                            <div class="field">
+                                <input type="text" name="dest_observ" placeholder="Observaciones">
+                            </div>
+                            <div class="field">
+                                <input type="text" name="dest_medidas" placeholder="Medidad">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="inline fields">
+                        <div class="nine wide field">
+
+                        </div>
+                        <div class="four wide field">
+
+                        </div>
+                        <div class="three wide field">
+                            <label>Precio:</label>
+                            <div class="ui right labeled input">
+                                <div class="ui label">$</div>
+                                <input type="text" name="price" placeholder="Amount">
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="inline fields">
+                        <div class="nine wide field">
+
+                        </div>
+                        <div class="four wide field">
+
+                        </div>
+                        <div class="disabled three wide field">
+                            <label>IVA:</label>
+                            <div class="ui right labeled input">
+                                <div class="ui label">%</div>
+                                <input type="text" name="iva" placeholder="16">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inline fields">
+                        <div class="nine wide field">
+
+                        </div>
+                        <div class="four wide field">
+
+                        </div>
+                        <div class="three wide field">
+                            <label>Total</label>
+                            <div class="ui right labeled input">
+                                <div class="ui label">$</div>
+                                <input type="text" name="total" placeholder="Total">
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </form>
+        </div>
+        <div class="actions">
+            <div class="ui approve button" id="add">Enviar</div>
+            <div class="ui cancel button">Cancelar</div>
+        </div>'

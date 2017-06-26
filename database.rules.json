@@ -1,0 +1,12 @@
+{
+  "rules": {
+    ".write": "auth != null",
+    ".read":"auth != null",
+      "guide":{
+        "$key":{
+          ".read": true
+        }
+      }
+  }
+}
+

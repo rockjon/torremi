@@ -1,0 +1,26 @@
+ <div class="ui calendar" id="abcd">
+    <div class="ui input left icon">
+        <i class="calendar icon"></i>
+        <input type="text" name="fecha_i" placeholder="Date" value="5/30/2015 3pm">
+    </div>
+</div>
+<div class="one wide field">
+</div>
+<div class="three wide field">
+    <div class="ui disabled checked checkbox">
+        <input type="checkbox" disabled="disabled" checked="" name="documentado">
+        <label>Documentado</label>
+    </div>
+</div>
+<div class="three wide field">
+    <div class="ui checkbox">
+        <input type="checkbox" name="camino">
+        <label>En Camino</label>
+    </div>
+</div>
+<div class="three wide field">
+    <div class="ui checkbox">
+        <input type="checkbox" name="entregado">
+        <label>Entregado</label>
+    </div>
+</div>

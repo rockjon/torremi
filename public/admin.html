@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>v 1.1.5</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.debug.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/dataTables.semanticui.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,700' rel='stylesheet' type='text/css'>
+    <script src="https://rawgit.com/Semantic-Org/Semantic-UI/22acbc26714637a5f0e1248c22aea16622f9822e/dist/semantic.min.js"></script>
+    <script src="https://rawgit.com/mdehoog/Semantic-UI-Calendar/master/dist/calendar.min.js"></script>
+    <link href="https://rawgit.com/mdehoog/Semantic-UI-Calendar/master/dist/calendar.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.9.0/firebase.js"></script>
+    <script src="/js/conexion.js"></script>
+    <script src="/js/tableGuides.js" crossorigin="anonymous"></script>
+    <script src="/js/control.js"></script>
+
+
+    <script>
+        function newGuia() {
+            var data = $('#newGuide').serializeArray();
+            var obj = {};
+            for (var i = 0, l = data.length; i < l; i++) {
+                obj[data[i].name] = data[i].value;
+            }
+            //alert(JSON.stringify(obj));
+            return firebase.database().ref().once('value').then(function(snapshot) {
+                countering(snapshot.val().counter, obj);
+            });
+        }
+
+        function countering(counter, data) {
+            alert(counter);
+            var postData = counter + 1;
+
+            var updates = {
+                counter: postData
+            };
+            firebase.database().ref().update(updates);
+            if (counter < 10) {
+                data["id"] = "CT000" + counter;
+            } else {
+                data["id"] = "CT00" + counter;
+            }
+
+
+            var rootRef = firebase.database().ref('guide/').push();
+            var rootKey = rootRef.key;
+            rootRef.set(data);
+            var dataCliente = {
+                id:  data["id"],
+                fecha_i: data["fecha_i"],
+                remit_ciudad:data["remit_ciudad"] ,
+                dest_ciudad: data["dest_ciudad"],
+                //camino: data["camino"] === 0 ? "hola" : "no"
+            };
+            firebase.database().ref('dataClient/'+rootKey).set(dataCliente);
+            $('#newGuide')[0].reset();
+        }
+
+        function initApp() {
+            document.getElementById('logout').addEventListener('click', logout, false);
+            //document.getElementById('add').addEventListener('click', newGuia, false);
+            $('#add').on('click', function() {
+                $('#newGuide').form('validate form');
+            });
+            firebase.auth().onAuthStateChanged(function(user) {
+                if (!user) {
+                    firebase.auth().signOut()
+                    location.href = "/login.html";
+
+                } else {
+                    var connectedRef = firebase.database().ref(".info/connected");
+                    connectedRef.on("value", function(snap) {
+                        if (snap.val() === true) {
+                            $("#cargando").removeClass("active");
+                            setTimeout(function() {
+                                $(document).ready(function() {
+                                    $('#example').DataTable({
+                                        "language": {
+                                            "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+                                        }
+                                    });
+                                });
+                            }, 2000);
+
+                        } else {
+                            $("#cargando").addClass("active");
+                        }
+                    });
+                }
+            });
+
+            table();
+        }
+
+
+
+
+        function logout() {
+            firebase.auth().signOut()
+        }
+
+        window.onload = function() {
+            initApp();
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: rgb(241, 241, 241);
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="cargando" class="ui dimmer">
+    <div class="ui indeterminate text loader">Cargando Archivos</div>
+</div>
+    <div class="ui blue inverted medium menu">
+        <a class="item">
+            <h3>Torremi</h3>
+        </a>
+
+        <div class="right menu">
+            <!--<div class="ui dropdown item">
+                Language <i class="dropdown icon"></i>
+                <div class="menu">
+                    <a class="item">English</a>
+                    <a class="item">Russian</a>
+                    <a class="item">Spanish</a>
+                </div>
+            </div>-->
+            <div class="item">
+                <div id='logout' class="ui primary button">Salir</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="show" class="ui primary labeled icon button">
+        <i class="browser icon"></i> Agregar Guia
+    </div>
+    <div class="ui raised segment" style="overflow-x: scroll">
+        <table id="example" class="ui padded celled small table" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th> Fecha </th>
+                    <th> Remitente</th>
+                    <th> Domicilio</th>
+                    <th> Telefono</th>
+                    <th> Destinatario</th>
+                    <th> Domicilio</th>
+                    <th> Telefono</th>
+                    <th> Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="table">
+
+            </tbody>
+        </table>
+    </div>
+    <!------------------MODAL For Input Data --------------------------->
+    <div class="ui modal add-modal">
+        <div class="header">Guia</div>
+        <div class="content">
+            <form class="ui mini form" id="newGuide">
+                <div class="ui calendar" id="abc">
+                    <div class="ui input left icon">
+                        <i class="calendar icon"></i>
+                        <input type="text" name="fecha_i" placeholder="Date">
+                    </div>
+                </div>
+                <h4 class="ui dividing header">Remitente</h4>
+                <div class="field">
+                    <label>Nombre</label>
+                    <input type="text" name="remit_nom" placeholder="Nombre">
+                </div>
+                <div class="field">
+                    <label>Domicilio</label>
+                    <div class="fields">
+                        <div class="fourteen wide field">
+                            <input type="text" name="remit_domicilio" placeholder="Domicilio">
+                        </div>
+                        <div class="two wide field">
+                            <input type="text" name="remit_cp" placeholder="CP">
+                        </div>
+                    </div>
+                    <div class="fields">
+                        <div class="five wide field">
+                            <input type="text" name="remit_colonia" placeholder="Colonia">
+                        </div>
+                        <div class="five wide field">
+                            <input type="text" name="remit_municipio" placeholder="Municipio">
+                        </div>
+                        <div class="six wide field">
+                            <input type="text" name="remit_ciudad" placeholder="Ciudad">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="two fields">
+                            <div class="field">
+                                <input type="text" name="remit_rfc" placeholder="RFC">
+                            </div>
+                            <div class="field">
+                                <input type="text" name="remit_tel" placeholder="Telefono">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h4 class="ui dividing header">Destinatario</h4>
+                <div class="field">
+                    <label>Nombre</label>
+                    <input type="text" name="dest_nom" placeholder="Nombre">
+                </div>
+                <div class="field">
+                    <label>Domicilio</label>
+                    <div class="fields">
+                        <div class="fourteen wide field">
+                            <input type="text" name="dest_domicilio" placeholder="Domicilio">
+                        </div>
+                        <div class="two wide field">
+                            <input type="text" name="dest_cp" placeholder="CP">
+                        </div>
+                    </div>
+                    <div class="fields">
+                        <div class="five wide field">
+                            <input type="text" name="dest_colonia" placeholder="Colonia">
+                        </div>
+                        <div class="five wide field">
+                            <input type="text" name="dest_municipio" placeholder="Municipio">
+                        </div>
+                        <div class="six wide field">
+                            <input type="text" name="dest_ciudad" placeholder="Ciudad">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="two fields">
+                            <div class="field">
+                                <input type="text" name="dest_rfc" placeholder="RFC">
+                            </div>
+                            <div class="field">
+                                <input type="text" name="dest_tel" placeholder="Telefono">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="two fields">
+                            <div class="field">
+                                <input type="text" name="dest_tproduct" placeholder="Tipo Producto">
+                            </div>
+                            <div class="field">
+                                <input type="text" name="dest_bultos" placeholder="No. Bultos">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fields">
+                        <div class="eight wide field">
+                            <input type="text" name="dest_observ" placeholder="Observaciones">
+                        </div>
+                        <div class="two wide field">
+                            <input type="text" id="med1" name="dest_medidas1" placeholder="Medidad">
+                        </div>
+                        <div class="two wide field">
+                            <input type="text" id="med2" name="dest_medidas2" placeholder="Medidad">
+                        </div>
+                        <div class="two wide field">
+                            <input type="text" id="med3" name="dest_medidas3" placeholder="Medidad">
+                        </div>
+                        <div class="two wide field">
+                            <div class="ui right labeled input">
+                                <input type="text" id="weigth" name="dest_kg" placeholder="peso">
+                                <div class="ui basic label">
+                                    kg
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="inline fields">
+                        <div class="nine wide field">
+
+                        </div>
+                        <div class="four wide field">
+
+                        </div>
+                        <div class="three wide field">
+                            <label>Precio:</label>
+                            <div class="ui labeled input">
+                                <div class="ui label">$</div>
+                                <input id="price" type="text" name="price" placeholder="0.00">
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="inline fields">
+                        <div class="nine wide field">
+
+                        </div>
+                        <div class="four wide field">
+
+                        </div>
+                        <div class="three wide field">
+                            <label>IVA:</label>
+                            <div class="ui disabled labeled input">
+                                <div class="ui label">%</div>
+                                <input type="text" name="iva" placeholder=".16">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inline fields">
+                        <div class="nine wide field">
+
+                        </div>
+                        <div class="four wide field">
+
+                        </div>
+                        <div class="three wide field">
+                            <label>Total</label>
+                            <div class="ui labeled input">
+                                <div class="ui label">$</div>
+                                <input id="total" type="text" name="total" placeholder="0.00">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="actions">
+            <div class="ui submit approve button" id="add">Enviar</div>
+            <div class="ui cancel button">Cancelar</div>
+        </div>
+    </div>
+    <!------------------END MODAL For Input Data ----------------------->
+
+
+
+
+</body>
+<script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.13/js/dataTables.semanticui.min.js"></script>
+<script>
+    var aFunction = function() {
+
+        $('#newGuide').form({
+            fields: {
+                remit_nom: {
+                    rules: [{
+                        type: 'empty',
+                        prompt: 'Intruduce Nombre'
+                    }]
+                },
+                dest_rfc: {
+                    rules: [
+                        {
+                            type: 'maxLength[13]',
+                            prompt: 'El RFC debe tener {ruleValue} caracteres'
+                        }
+                    ]
+                },
+                dest_nom: {
+                    rules: [{
+                        type: 'empty',
+                    }]
+                }
+            },
+            on: 'blur',
+            inline: true,
+            onSuccess: function(event, fields) {
+                newGuia();
+                console.log(fields);
+                $('.ui.modal.add-modal').modal('hide');
+            },
+            onFailure: function(formErrors, fields) {
+
+                console.log("on failure");
+                console.log(fields);
+            }
+        });
+
+        $('#show').on('click', function() {
+            $('.ui.form .field.error').removeClass("error");
+            $('.ui.form .prompt').remove();
+            $('#newGuide').trigger("reset");
+            $('.ui.modal.add-modal').modal({
+                blurring: true,
+                closable: true,
+                onShow: function() {
+                    $('#abc').calendar({
+                        type: 'date',
+                        formatter: {
+                            date: function(date, settings) {
+                                if (!date) return '';
+                                var day = ("0" + date.getDate()).slice(-2);
+                                var month = ("0" + (date.getMonth() + 1)).slice(-2);
+                                var year = date.getFullYear();
+                                return day + '/' + month + '/' + year;
+                            }
+                        }
+                    });
+                },
+                onDeny: function() {
+                    //
+                },
+                onApprove: function() {
+
+                    return false;
+
+
+                }
+            }).modal('show');
+
+        });
+
+        $(document).on('keyup', "input[name='remit_cp']", function(e) {
+            var zip = $("input[name='remit_cp']").val();
+            fillZip(zip);
+        });
+
+        function fillZip(zip) {
+            if (zip.length === 5) {
+                $.getJSON('https://api-codigos-postales.herokuapp.com/v2/codigo_postal/' + zip, function(data) {
+                    $("input[name='remit_colonia']").val(data["colonias"][0]);
+                    $("input[name='remit_municipio']").val(data["municipio"]);
+                    $("input[name='remit_ciudad']").val(data["estado"]);
+                });
+            } else {
+                //alert(zip);
+            }
+        }
+
+        $(document).on('keyup', "input[name='dest_cp']", function(e) {
+            var zip = $("input[name='dest_cp']").val();
+            fillZip2(zip);
+        });
+
+        function fillZip2(zip) {
+            if (zip.length === 5) {
+                $.getJSON('https://api-codigos-postales.herokuapp.com/v2/codigo_postal/' + zip, function(data) {
+                    $("input[name='dest_colonia']").val(data["colonias"][0]);
+                    $("input[name='dest_municipio']").val(data["municipio"]);
+                    $("input[name='dest_ciudad']").val(data["estado"]);
+                });
+            } else {
+                //alert(zip);
+            }
+        }
+
+        $("#med1").keyup(function() {
+            var val1 = $("#med1").val();
+            var val2 = $("#med2").val();
+            var val3 = $("#med3").val();
+            sumkg(val1, val2, val3);
+        });
+        $("#med2").keyup(function() {
+            var val1 = $("#med1").val();
+            var val2 = $("#med2").val();
+            var val3 = $("#med3").val();
+            sumkg(val1, val2, val3);
+        });
+        $("#med3").keyup(function() {
+            var val1 = $("#med1").val();
+            var val2 = $("#med2").val();
+            var val3 = $("#med3").val();
+            sumkg(val1, val2, val3);
+        });
+        $("#price").keyup(function() {
+            var price = $(this).val();
+            var total = price * 1.16;
+            $("#total").val(parseFloat(total).toFixed(2));
+        });
+
+        function sumkg(val1, val2, val3) {
+
+            var suma = 0;
+            suma = parseInt(val1) * parseInt(val2) * parseInt(val3);
+            if (!isNaN(suma)) {
+                var kg = suma / 6000;
+                $("#weigth").val(parseInt(kg));
+                price(kg);
+            }
+        }
+
+        function price(kg) {
+            var kg = parseInt(kg);
+            var price = 0;
+            var total = 0;
+            if (kg > 2) {
+                price = ((kg - 2) * 11.50) + 120
+                total = price * 1.16;
+                $("#price").val(parseFloat(price).toFixed(2));
+                $("#total").val(parseFloat(total).toFixed(2));
+            } else if (kg === 2) {
+                price = 120;
+                total = price * 1.16;
+                $("#price").val(parseFloat(price).toFixed(2));
+                $("#total").val(parseFloat(total).toFixed(2));
+            } else {
+                $("#price").val("0.00");
+                $("#total").val("0.00");
+            }
+        }
+    }
+    $(document).ready(aFunction);
+</script>
+
+</html>
