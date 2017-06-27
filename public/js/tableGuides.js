@@ -98,9 +98,11 @@ function showData(key) {
         var dest_kg = snapshot.child("dest_kg").val();
         var price = snapshot.child("price").val();
         var total = snapshot.child("total").val();
+        var recibio = snapshot.child("recibio").exists()===true?snapshot.child("recibio").val():"¿Quien Recibio?";
         var camino = snapshot.child("camino").exists();
         var entrega = snapshot.child("entregado").exists();
-        if (fillModal(key, id, fecha_i, remit_nom, remit_domicilio, remit_cp, remit_colonia, remit_municipio, remit_ciudad, remit_rfc, remit_tel, dest_nom, dest_domicilio, dest_cp, dest_colonia, dest_municipio, dest_ciudad, dest_rfc, dest_tel, dest_bultos, dest_tproduct, dest_observ, dest_medidas1, dest_medidas2, dest_medidas3, dest_kg, price, total)) {
+
+        if (fillModal(key, id, fecha_i, remit_nom, remit_domicilio, remit_cp, remit_colonia, remit_municipio, remit_ciudad, remit_rfc, remit_tel, dest_nom, dest_domicilio, dest_cp, dest_colonia, dest_municipio, dest_ciudad, dest_rfc, dest_tel, dest_bultos, dest_tproduct, dest_observ, dest_medidas1, dest_medidas2, dest_medidas3, dest_kg, price, total,recibio)) {
             if (camino) {
                 var caminoCheck = document.getElementById('inpCamino');
                 caminoCheck.setAttribute("disabled", "disabled");
@@ -170,8 +172,8 @@ function showData(key) {
     });
 }
 
-function fillModal(key, id, fecha_i, remit_nom, remit_domicilio, remit_cp, remit_colonia, remit_municipio, remit_ciudad, remit_rfc, remit_tel, dest_nom, dest_domicilio, dest_cp, dest_colonia, dest_municipio, dest_ciudad, dest_rfc, dest_tel, dest_bultos, dest_tproduct, dest_observ, dest_medidas1, dest_medidas2, dest_medidas3, dest_kg, price, total) {
-
+function fillModal(key, id, fecha_i, remit_nom, remit_domicilio, remit_cp, remit_colonia, remit_municipio, remit_ciudad, remit_rfc, remit_tel, dest_nom, dest_domicilio, dest_cp, dest_colonia, dest_municipio, dest_ciudad, dest_rfc, dest_tel, dest_bultos, dest_tproduct, dest_observ, dest_medidas1, dest_medidas2, dest_medidas3, dest_kg, price, total,recibio) {
+ alert(remit_nom);
     var html =
         '<div class="header">' + id + '</div>' +
         '        <div class="content">' +
@@ -185,36 +187,36 @@ function fillModal(key, id, fecha_i, remit_nom, remit_domicilio, remit_cp, remit
         '                <h4 class="ui dividing header">Remitente</h4>' +
         '                <div class="field">' +
         '                    <label>Nombre</label>' +
-        '                    <input type="text" name="remit_nom" placeholder="Nombre" value=' + remit_nom + '>' +
+        '                    <input type="text" name="remit_nom" placeholder="Nombre" value=" '+ remit_nom + '">' +
         '                </div>' +
         '                <div class="field">' +
         '                    <label>Domicilio</label>' +
         '                    <div class="fields">' +
         '                        <div class="fourteen wide field">' +
-        '                            <input type="text" name="remit_domicilio" placeholder="Domicilio" value=' + remit_domicilio + '>' +
+        '                            <input type="text" name="remit_domicilio" placeholder="Domicilio" value="' + remit_domicilio + '">' +
         '                        </div>' +
         '                        <div class="two wide field">' +
-        '                            <input type="text" name="remit_cp" placeholder="CP" value=' + remit_cp + '>' +
+        '                            <input type="text" name="remit_cp" placeholder="CP" value="' + remit_cp + '">' +
         '                        </div>' +
         '                    </div>' +
         '                    <div class="fields">' +
         '                        <div class="five wide field">' +
-        '                            <input type="text" name="remit_colonia" placeholder="Colonia" value=' + remit_colonia + '>' +
+        '                            <input type="text" name="remit_colonia" placeholder="Colonia" value="' + remit_colonia + '">' +
         '                        </div>' +
         '                        <div class="five wide field">' +
-        '                            <input type="text" name="remit_municipio" placeholder="Municipio" value=' + remit_municipio + '>' +
+        '                            <input type="text" name="remit_municipio" placeholder="Municipio" value="' + remit_municipio + '">' +
         '                        </div>' +
         '                        <div class="six wide field">' +
-        '                            <input type="text" name="remit_ciudad" placeholder="Ciudad" value=' + remit_ciudad + '>' +
+        '                            <input type="text" name="remit_ciudad" placeholder="Ciudad" value="' + remit_ciudad + '">' +
         '                        </div>' +
         '                    </div>' +
         '                    <div class="field">' +
         '                        <div class="two fields">' +
         '                            <div class="field">' +
-        '                                <input type="text" name="remit_rfc" placeholder="RFC" value=' + remit_rfc + '>' +
+        '                                <input type="text" name="remit_rfc" placeholder="RFC" value="' + remit_rfc + '">' +
         '                            </div>' +
         '                            <div class="field">' +
-        '                                <input type="text" name="remit_tel" placeholder="Telefono" value=' + remit_tel + '>' +
+        '                                <input type="text" name="remit_tel" placeholder="Telefono" value="' + remit_tel + '">' +
         '                            </div>' +
         '                        </div>' +
         '                    </div>' +
@@ -222,36 +224,36 @@ function fillModal(key, id, fecha_i, remit_nom, remit_domicilio, remit_cp, remit
         '                <h4 class="ui dividing header">Destinatario</h4>' +
         '                <div class="field">' +
         '                    <label>Nombre</label>' +
-        '                    <input type="text" name="dest_nom" placeholder="Nombre" value=' + dest_nom + '>' +
+        '                    <input type="text" name="dest_nom" placeholder="Nombre" value="' + dest_nom + '">' +
         '                </div>' +
         '                <div class="field">' +
         '                    <label>Domicilio</label>' +
         '                    <div class="fields">' +
         '                        <div class="fourteen wide field">' +
-        '                            <input type="text" name="dest_domicilio" placeholder="Domicilio" value=' + dest_domicilio + '>' +
+        '                            <input type="text" name="dest_domicilio" placeholder="Domicilio" value="' + dest_domicilio + '">' +
         '                        </div>' +
         '                        <div class="two wide field">' +
-        '                            <input type="text" name="dest_cp" placeholder="CP" value=' + dest_cp + '>' +
+        '                            <input type="text" name="dest_cp" placeholder="CP" value="' + dest_cp + '">' +
         '                        </div>' +
         '                    </div>' +
         '                    <div class="fields">' +
         '                        <div class="five wide field">' +
-        '                            <input type="text" name="dest_colonia" placeholder="Colonia" value=' + dest_colonia + '>' +
+        '                            <input type="text" name="dest_colonia" placeholder="Colonia" value="' + dest_colonia + '">' +
         '                        </div>' +
         '                        <div class="five wide field">' +
-        '                            <input type="text" name="dest_municipio" placeholder="Municipio" value=' + dest_municipio + '>' +
+        '                            <input type="text" name="dest_municipio" placeholder="Municipio" value="' + dest_municipio + '">' +
         '                        </div>' +
         '                        <div class="six wide field">' +
-        '                            <input type="text" name="dest_ciudad" placeholder="Ciudad" value=' + dest_ciudad + '>' +
+        '                            <input type="text" name="dest_ciudad" placeholder="Ciudad" value="' + dest_ciudad + '">' +
         '                        </div>' +
         '                    </div>' +
         '                    <div class="field">' +
         '                        <div class="two fields">' +
         '                            <div class="field">' +
-        '                                <input type="text" name="dest_rfc" placeholder="RFC" value=' + dest_rfc + '>' +
+        '                                <input type="text" name="dest_rfc" placeholder="RFC" value="' + dest_rfc + '">' +
         '                            </div>' +
         '                            <div class="field">' +
-        '                                <input type="text" name="dest_tel" placeholder="Telefono" value=' + dest_tel + '>' +
+        '                                <input type="text" name="dest_tel" placeholder="Telefono" value="' + dest_tel + '">' +
         '                            </div>' +
         '                        </div>' +
         '                    </div>' +
@@ -267,29 +269,29 @@ function fillModal(key, id, fecha_i, remit_nom, remit_domicilio, remit_cp, remit
         '                    <div class="field">' +
         '                        <div class="two fields">' +
         '                            <div class="field">' +
-        '                                <input type="text" name="dest_tproduct" placeholder="Tipo Producto" value=' + dest_tproduct + '>' +
+        '                                <input type="text" name="dest_tproduct" placeholder="Tipo Producto" value="' + dest_tproduct + '">' +
         '                            </div>' +
         '                            <div class="field">' +
-        '                                <input type="text" name="dest_bultos" placeholder="No. Bultos" value=' + dest_bultos + '>' +
+        '                                <input type="text" name="dest_bultos" placeholder="No. Bultos" value="' + dest_bultos + '">' +
         '                            </div>' +
         '                        </div>' +
         '                    </div>' +
         '                    <div class="fields">' +
         '                        <div class="eight wide field">' +
-        '                            <input type="text" name="dest_observ" placeholder="Observaciones" value=' + dest_observ + '>' +
+        '                            <input type="text" name="dest_observ" placeholder="Observaciones" value="' + dest_observ + '">' +
         '                        </div>' +
         '                        <div class="two wide field">' +
-        '                            <input type="text" id="med1' + key + '" name="dest_medidas1" placeholder="Medida" value=' + dest_medidas1 + '>' +
+        '                            <input type="text" id="med1' + key + '" name="dest_medidas1" placeholder="Medida" value="' + dest_medidas1 + '">' +
         '                        </div>' +
         '                        <div class="two wide field">' +
-        '                            <input type="text" id="med2' + key + '" name="dest_medidas2" placeholder="Medida" value=' + dest_medidas2 + '>' +
+        '                            <input type="text" id="med2' + key + '" name="dest_medidas2" placeholder="Medida" value="' + dest_medidas2 + '">' +
         '                        </div>' +
         '                        <div class="two wide field">' +
-        '                            <input type="text" id="med3' + key + '" name="dest_medidas3" placeholder="Medida" value=' + dest_medidas3 + '>' +
+        '                            <input type="text" id="med3' + key + '" name="dest_medidas3" placeholder="Medida" value="' + dest_medidas3 + '">' +
         '                        </div>' +
         '                        <div class="two wide field">' +
         '                            <div class="ui right labeled input">' +
-        '                                <input type="text" id="weigth' + key + '" name="dest_kg" placeholder="peso" value=' + dest_kg + '>' +
+        '                                <input type="text" id="weigth' + key + '" name="dest_kg" placeholder="peso" value="' + dest_kg + '">' +
         '                                <div class="ui basic label">' +
         '                                    kg' +
         '                                </div>' +
@@ -300,7 +302,7 @@ function fillModal(key, id, fecha_i, remit_nom, remit_domicilio, remit_cp, remit
         ' <div class="ui calendar" id="calendar2' + key + '">' +
         '    <div class="ui input left icon">' +
         '        <i class="calendar icon"></i>' +
-        '        <input type="text" name="fecha_f" placeholder="Date" value=' + fecha_i + '>' +
+        '        <input type="text" name="fecha_f" placeholder="Date" value="' + fecha_i + '">' +
         '    </div>' +
         '</div>' +
         '<div class="one wide field">' +
@@ -327,12 +329,13 @@ function fillModal(key, id, fecha_i, remit_nom, remit_domicilio, remit_cp, remit
         '                            <label>Precio:</label>' +
         '                            <div class="ui labeled input">' +
         '                                <div class="ui label">$</div>' +
-        '                                <input type="text" id="price' + key + '" name="price" placeholder="0.00" value=' + price + '>' +
+        '                                <input type="text" id="price' + key + '" name="price" placeholder="0.00" value="' + price + '">' +
         '                            </div>' +
         '                        </div>' +
         '                    </div>' +
         '                    <div class="inline fields">' +
         '                        <div class="nine wide field">' +
+        '                                <input type="text" name="recibio" placeholder="¿Quien Recibio?" value="' + recibio + '">' +
         '                        </div>' +
         '                        <div class="four wide field">' +
         '                        </div>' +
@@ -353,13 +356,9 @@ function fillModal(key, id, fecha_i, remit_nom, remit_domicilio, remit_cp, remit
         '                            <label>Total</label>' +
         '                            <div class="ui labeled input">' +
         '                                <div class="ui label">$</div>' +
-        '                                <input type="text" id="total' + key + '" name="total" placeholder="0.00" value=' + total + '>' +
+        '                                <input type="text" id="total' + key + '" name="total" placeholder="0.00" value="' + total + '">' +
         '                            </div>' +
         '                        </div>' +
-        '                    </div>' +
-        '                    <div class="ui checkbox">' +
-        '                        <input type="checkbox" name="status">' +
-        '                        <label>Make my profile visible</label>' +
         '                    </div>' +
         '                </div>' +
         '            </form>' +
@@ -640,6 +639,11 @@ function plugins(key) {
         var price = $(this).val();
         var total = price * 1.16;
         $("#total" + key).val(parseFloat(total).toFixed(2));
+    });
+
+    $("#weigth" + key).keyup(function () {
+        var kg = $(this).val();
+        price(kg);
     });
 
     function sumkg(val1, val2, val3) {

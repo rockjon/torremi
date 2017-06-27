@@ -265,13 +265,13 @@
                             <input type="text" name="dest_observ" placeholder="Observaciones">
                         </div>
                         <div class="two wide field">
-                            <input type="text" id="med1" name="dest_medidas1" placeholder="Medidad">
+                            <input type="text" id="med1" name="dest_medidas1" placeholder="Medida">
                         </div>
                         <div class="two wide field">
-                            <input type="text" id="med2" name="dest_medidas2" placeholder="Medidad">
+                            <input type="text" id="med2" name="dest_medidas2" placeholder="Medida">
                         </div>
                         <div class="two wide field">
-                            <input type="text" id="med3" name="dest_medidas3" placeholder="Medidad">
+                            <input type="text" id="med3" name="dest_medidas3" placeholder="Medida">
                         </div>
                         <div class="two wide field">
                             <div class="ui right labeled input">
@@ -477,6 +477,10 @@
             var price = $(this).val();
             var total = price * 1.16;
             $("#total").val(parseFloat(total).toFixed(2));
+        });
+        $("#weigth").keyup(function () {
+            var kg = $(this).val();
+            price(kg);
         });
 
         function sumkg(val1, val2, val3) {
