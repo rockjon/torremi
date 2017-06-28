@@ -602,6 +602,7 @@ function updateGuide(key) {
                 fecha_f: obj["fecha_f"],
                 remit_ciudad:obj["remit_ciudad"] ,
                 dest_ciudad: obj["dest_ciudad"],
+                recibio: obj["recibio"],
                 status: status(key)
             };
      firebase.database().ref('dataClient/'+key+"/").update(dataCliente);

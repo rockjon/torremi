@@ -364,8 +364,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                         </div>
                     </div>
                     <div class="ui divider"></div>
-                    <img class="ui middle aligned small image" src="">
-                    Recibio:<span id="recibio_nom"></span>
+                    <img class="ui middle aligned small image" src=""> Recibio:
+                    <span id="recibio_nom"></span>
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
@@ -379,49 +379,51 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
         <script>
             function showData(key) {
 
-            var ref = firebase.database().ref("dataClient/");
-             ref.once('value', function(snapshot) {
-              if (snapshot.hasChild(key)) {
-                  var status = snapshot.child(key+"/status").exists();
-                  var valStatus = snapshot.child(key+"/status").val();
-                  var fecha_i = snapshot.child(key+"/fecha_i").val();
-                  var fecha_f = snapshot.child(key+"/fecha_f").val();
-                  var dest_ciudad = snapshot.child(key+"/dest_ciudad").val();
-                  var remit_ciudad = snapshot.child(key+"/remit_ciudad").val();
-                  $('#fecha_i').html(fecha_i);
-                  $('#remit_ciudad').html(remit_ciudad);
-                  $('#dest_ciudad').html(dest_ciudad);
-                  if(status){
-                      if(valStatus === "en camino"){
-                          $("#documentado").addClass("disabled");
-                          $("#camino").removeClass("disabled");
-                          $("#camino").addClass("active");
-                      }else if(valStatus === "entregado"){
-                          $("#documentado").addClass("disabled");
-                          $("#camino").addClass("disabled");
-                          $("#camino").addClass("completed");
-                          $("#entregado").addClass("active");
-                          $("#entregado").addClass("completed");
-                          $('#fecha_f').html(fecha_f);
+                var ref = firebase.database().ref("dataClient/");
+                ref.once('value', function(snapshot) {
+                    if (snapshot.hasChild(key)) {
+                        var status = snapshot.child(key + "/status").exists();
+                        var valStatus = snapshot.child(key + "/status").val();
+                        var fecha_i = snapshot.child(key + "/fecha_i").val();
+                        var fecha_f = snapshot.child(key + "/fecha_f").val();
+                        var dest_ciudad = snapshot.child(key + "/dest_ciudad").val();
+                        var remit_ciudad = snapshot.child(key + "/remit_ciudad").val();
+                        var recibio = snapshot.child(key + "/recibio").val();
+                        $('#fecha_i').html(fecha_i);
+                        $('#remit_ciudad').html(remit_ciudad);
+                        $('#dest_ciudad').html(dest_ciudad);
+                        if (status) {
+                            if (valStatus === "en camino") {
+                                $("#documentado").addClass("disabled");
+                                $("#camino").removeClass("disabled");
+                                $("#camino").addClass("active");
+                            } else if (valStatus === "entregado") {
+                                $("#documentado").addClass("disabled");
+                                $("#camino").addClass("disabled");
+                                $("#camino").addClass("completed");
+                                $("#entregado").addClass("active");
+                                $("#entregado").addClass("completed");
+                                $('#fecha_f').html(fecha_f);
+                                $('#recibio_nom').html(recibio);
 
-                      }
+                            }
 
-                  }
-                  $('#myModal').modal('show');
+                        }
+                        $('#myModal').modal('show');
 
-              }
-            });
+                    }
+                });
 
-//                    var camino = snapshot.child("camino").exists();
-//                    var entrega = snapshot.child("entregado").exists();
-//                    alert(camino);
-//                    if (entrega) {
-//                        txtStatus = "entregado";
-//                    } else if (camino) {
-//                        txtStatus = "en camino";
-//                    } else {
-//                        txtStatus = "documentado";
-//                    }
+                //                    var camino = snapshot.child("camino").exists();
+                //                    var entrega = snapshot.child("entregado").exists();
+                //                    alert(camino);
+                //                    if (entrega) {
+                //                        txtStatus = "entregado";
+                //                    } else if (camino) {
+                //                        txtStatus = "en camino";
+                //                    } else {
+                //                        txtStatus = "documentado";
+                //                    }
 
 
 
