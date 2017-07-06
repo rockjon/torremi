@@ -12,11 +12,11 @@ function elimina(key) {
 function table() {
     var commentsRef = firebase.database().ref('guide/');
     commentsRef.on('child_added', function (data) {
-        drawTable(data.val().id, data.val().fecha_i, data.val().remit_nom, data.val().remit_domicilio, data.val().remit_tel, data.val().dest_nom, data.val().dest_domicilio, data.val().dest_tel, data.key);
+        drawTable(data.val().id, data.val().fecha_i, data.val().remit_nom, data.val().remit_domicilio, data.val().remit_tel, data.val().dest_nom, data.val().dest_domicilio,  data.key);
     });
     commentsRef.on('child_changed', function (data) {
         $("#row_" + data.key).remove();
-        drawTable(data.val().id, data.val().fecha_i, data.val().remit_nom, data.val().remit_domicilio, data.val().remit_tel, data.val().dest_nom, data.val().dest_domicilio, data.val().dest_tel, data.key);
+        drawTable(data.val().id, data.val().fecha_i, data.val().remit_nom, data.val().remit_domicilio, data.val().remit_tel, data.val().dest_nom, data.val().dest_domicilio, data.key);
 
     });
 }
@@ -40,7 +40,7 @@ function status(key) {
 }
 
 
-function drawTable(id, fecha, remit_nom, remit_domicilio, remit_tel, dest_nom, dest_domicilio, dest_tel, key) {
+function drawTable(id, fecha, remit_nom, remit_domicilio, remit_tel, dest_nom, dest_domicilio, key) {
     var html =
         '<td>' + id + '</td>' +
         '<td>' + fecha + '</td>' +
@@ -49,7 +49,7 @@ function drawTable(id, fecha, remit_nom, remit_domicilio, remit_tel, dest_nom, d
         '<td>' + remit_tel + '</td>' +
         '<td>' + dest_nom + '</td>' +
         '<td>' + dest_domicilio + '</td>' +
-        '<td>' + dest_tel + '</td>' +
+        '<td>' + key + '</td>' +
         '<td >' + status(key) + '</td>' +
         '<td>' + '<div class="ui small basic icon buttons">' +
         '<button class=" ui button" onclick="elimina(this.id)" id="' + key + '"><i class="remove icon"></i></button>' +
@@ -98,11 +98,11 @@ function showData(key) {
         var dest_kg = snapshot.child("dest_kg").val();
         var price = snapshot.child("price").val();
         var total = snapshot.child("total").val();
-        var recibio = snapshot.child("recibio").exists()===true?snapshot.child("recibio").val():"¿Quien Recibio?";
+        var recibio = snapshot.child("recibio").exists() === true ? snapshot.child("recibio").val() : "¿Quien Recibio?";
         var camino = snapshot.child("camino").exists();
         var entrega = snapshot.child("entregado").exists();
 
-        if (fillModal(key, id, fecha_i, remit_nom, remit_domicilio, remit_cp, remit_colonia, remit_municipio, remit_ciudad, remit_rfc, remit_tel, dest_nom, dest_domicilio, dest_cp, dest_colonia, dest_municipio, dest_ciudad, dest_rfc, dest_tel, dest_bultos, dest_tproduct, dest_observ, dest_medidas1, dest_medidas2, dest_medidas3, dest_kg, price, total,recibio)) {
+        if (fillModal(key, id, fecha_i, remit_nom, remit_domicilio, remit_cp, remit_colonia, remit_municipio, remit_ciudad, remit_rfc, remit_tel, dest_nom, dest_domicilio, dest_cp, dest_colonia, dest_municipio, dest_ciudad, dest_rfc, dest_tel, dest_bultos, dest_tproduct, dest_observ, dest_medidas1, dest_medidas2, dest_medidas3, dest_kg, price, total, recibio)) {
             if (camino) {
                 var caminoCheck = document.getElementById('inpCamino');
                 caminoCheck.setAttribute("disabled", "disabled");
@@ -172,8 +172,8 @@ function showData(key) {
     });
 }
 
-function fillModal(key, id, fecha_i, remit_nom, remit_domicilio, remit_cp, remit_colonia, remit_municipio, remit_ciudad, remit_rfc, remit_tel, dest_nom, dest_domicilio, dest_cp, dest_colonia, dest_municipio, dest_ciudad, dest_rfc, dest_tel, dest_bultos, dest_tproduct, dest_observ, dest_medidas1, dest_medidas2, dest_medidas3, dest_kg, price, total,recibio) {
- alert(remit_nom);
+function fillModal(key, id, fecha_i, remit_nom, remit_domicilio, remit_cp, remit_colonia, remit_municipio, remit_ciudad, remit_rfc, remit_tel, dest_nom, dest_domicilio, dest_cp, dest_colonia, dest_municipio, dest_ciudad, dest_rfc, dest_tel, dest_bultos, dest_tproduct, dest_observ, dest_medidas1, dest_medidas2, dest_medidas3, dest_kg, price, total, recibio) {
+    alert(remit_nom);
     var html =
         '<div class="header">' + id + '</div>' +
         '        <div class="content">' +
@@ -187,7 +187,7 @@ function fillModal(key, id, fecha_i, remit_nom, remit_domicilio, remit_cp, remit
         '                <h4 class="ui dividing header">Remitente</h4>' +
         '                <div class="field">' +
         '                    <label>Nombre</label>' +
-        '                    <input type="text" name="remit_nom" placeholder="Nombre" value=" '+ remit_nom + '">' +
+        '                    <input type="text" name="remit_nom" placeholder="Nombre" value=" ' + remit_nom + '">' +
         '                </div>' +
         '                <div class="field">' +
         '                    <label>Domicilio</label>' +
@@ -524,9 +524,25 @@ function fillPrint(key, id, fecha_i, remit_nom, remit_domicilio, remit_cp, remit
         img.crossOrigin = 'Anonymous';
         img.onload = function () {
             var canvas = document.createElement('CANVAS');
+            var MAX_WIDTH = 800;
+            var MAX_HEIGHT = 600;
+            var width = img.width;
+            var height = img.height;
+
+            if (width > height) {
+                if (width > MAX_WIDTH) {
+                    height *= MAX_WIDTH / width;
+                    width = MAX_WIDTH;
+                }
+            } else {
+                if (height > MAX_HEIGHT) {
+                    width *= MAX_HEIGHT / height;
+                    height = MAX_HEIGHT;
+                }
+            }
+            canvas.width = width;
+            canvas.height = height;
             var ctx = canvas.getContext('2d');
-            canvas.height = this.height;
-            canvas.width = this.width;
             ctx.drawImage(this, 0, 0);
             var dataURL = canvas.toDataURL(outputFormat || 'image/png');
             callback(dataURL);
@@ -546,7 +562,7 @@ function fillPrint(key, id, fecha_i, remit_nom, remit_domicilio, remit_cp, remit
 var file;
 
 function updateGuide(key) {
- $(".approve").addClass("loading");
+    $(".approve").addClass("loading");
     if (file) {
         var storageRef = firebase.storage().ref();
 
@@ -559,7 +575,7 @@ function updateGuide(key) {
         storageRef.child('images/' + file.name).put(file, metadata).then(function (snapshot) {
             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
 
-            if(progress===100){
+            if (progress === 100) {
                 $("#modal" + key).modal('hide');
                 $(".approve").removeClass("loading");
             }
@@ -576,7 +592,7 @@ function updateGuide(key) {
             };
 
             firebase.database().ref("guide/" + key + "/").update(postURl);
-            file=null;
+            file = null;
             //alert(url);
             // [END_EXCLUDE]
         }).catch(function (error) {
@@ -597,17 +613,20 @@ function updateGuide(key) {
     }
 
     firebase.database().ref("guide/" + key + "/").update(obj);
-      var dataCliente = {
-                fecha_i: obj["fecha_i"],
-                fecha_f: obj["fecha_f"],
-                remit_ciudad:obj["remit_ciudad"] ,
-                dest_ciudad: obj["dest_ciudad"],
-                recibio: obj["recibio"],
-                status: status(key)
-            };
-     firebase.database().ref('dataClient/'+key+"/").update(dataCliente);
+    var dataCliente = {
+        fecha_i: obj["fecha_i"],
+        fecha_f: obj["fecha_f"],
+        remit_ciudad: obj["remit_ciudad"],
+        dest_ciudad: obj["dest_ciudad"],
+        recibio: obj["recibio"],
+        status: status(key)
+    };
+    firebase.database().ref('dataClient/' + key + "/").update(dataCliente);
 
-    if(!file){$("#modal" + key).modal('hide'); $(".approve").removeClass("loading");}
+    if (!file) {
+        $("#modal" + key).modal('hide');
+        $(".approve").removeClass("loading");
+    }
 
 
 }
